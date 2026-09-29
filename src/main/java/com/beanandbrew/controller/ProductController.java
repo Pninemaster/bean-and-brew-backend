@@ -26,7 +26,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(productService.getById(id));
+            return ResponseEntity.ok(productService.getActiveById(id));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(e.getMessage());
         }
@@ -50,13 +50,22 @@ public class ProductController {
         }
     }
 
+    @PutMapping("/{id}/active")
+    public ResponseEntity<?> setActive(@PathVariable Long id, @RequestParam boolean value) {
+        try {
+            return ResponseEntity.ok(productService.setActive(id, value));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
             productService.delete(id);
             return ResponseEntity.ok("Product deleted successfully");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

@@ -30,6 +30,9 @@ public class Product {
 
     @Column(length = 2000)
     private String description;
+    
+    @Column(nullable = false, columnDefinition = "bit(1) default 1")
+    private boolean active = true;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -96,6 +99,25 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+        public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Integer getTotalStock() {
+        if (variants != null && !variants.isEmpty()) {
+            int sum = 0;
+            for (ProductVariant v : variants) {
+                sum += (v.getStock() == null ? 0 : v.getStock());
+            }
+            return sum;
+        }
+        return stock == null ? 0 : stock;
     }
 
     public List<ProductVariant> getVariants() {

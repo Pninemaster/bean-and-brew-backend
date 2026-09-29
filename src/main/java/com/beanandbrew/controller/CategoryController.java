@@ -33,8 +33,12 @@ public class CategoryController {
     }
 
     @PostMapping
-    public Category create(@RequestBody CategoryRequest request) {
-        return categoryService.create(request);
+    public ResponseEntity<?> create(@RequestBody CategoryRequest request) {
+        try {
+            return ResponseEntity.ok(categoryService.create(request));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
@@ -42,7 +46,7 @@ public class CategoryController {
         try {
             return ResponseEntity.ok(categoryService.update(id, request));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -52,7 +56,7 @@ public class CategoryController {
             categoryService.delete(id);
             return ResponseEntity.ok("Category deleted successfully");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
